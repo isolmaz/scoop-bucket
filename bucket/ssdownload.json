@@ -1,0 +1,37 @@
+{
+    "version": "1.11.0",
+    "description": "Native Windows file, video and audio download manager",
+    "homepage": "https://ssdownload.isolmaz.com",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/isolmaz/SSDownload/releases/download/v1.11.0/SSDownload-1.11.0-win64.zip",
+            "hash": "12a90feb1ed2e0d5a1e866d9024e298d1faa36503e0244c85c72f14614bc5bc1",
+            "extract_dir": "SSDownload-1.11.0-win64"
+        }
+    },
+    "bin": [["ssdownload-cli.exe", "ssdownload"]],
+    "shortcuts": [["ssdownload.exe", "SSDownload"]],
+    "post_install": [
+        "& \"$dir\\ssdownload-cli.exe\" --register-host",
+        "if ($LASTEXITCODE -ne 0) { warn 'The SSDownload browser integration could not be registered; run: ssdownload --register-host' }"
+    ],
+    "pre_uninstall": [
+        "& \"$dir\\ssdownload-cli.exe\" --unregister-host",
+        "if ($LASTEXITCODE -ne 0) { warn 'The SSDownload browser integration could not be removed; run: ssdownload --unregister-host' }"
+    ],
+    "checkver": {
+        "github": "https://github.com/isolmaz/SSDownload"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/isolmaz/SSDownload/releases/download/v$version/SSDownload-$version-win64.zip",
+                "extract_dir": "SSDownload-$version-win64",
+                "hash": {
+                    "url": "$baseurl/SHA256SUMS"
+                }
+            }
+        }
+    }
+}
