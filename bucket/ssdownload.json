@@ -17,8 +17,11 @@
         "if ($LASTEXITCODE -ne 0) { warn 'The SSDownload browser integration could not be registered; run: ssdownload --register-host' }"
     ],
     "pre_uninstall": [
+        "if ($cmd -eq 'uninstall') { & \"$(Split-Path $dir)\\current\\ssdownload-cli.exe\" --disable-autostart | Out-Null }",
         "& \"$dir\\ssdownload-cli.exe\" --unregister-host",
-        "if ($LASTEXITCODE -ne 0) { warn 'The SSDownload browser integration could not be removed; run: ssdownload --unregister-host' }"
+        "if ($LASTEXITCODE -ne 0) { warn 'The SSDownload browser integration of this copy could not be removed.' }",
+        "$setup = (Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\SSDownload' -ErrorAction SilentlyContinue).InstallLocation",
+        "if ($cmd -eq 'uninstall' -and $setup -and (Test-Path \"$setup\\ssdownload-cli.exe\")) { & \"$setup\\ssdownload-cli.exe\" --register-host | Out-Null }"
     ],
     "checkver": {
         "github": "https://github.com/isolmaz/SSDownload"
